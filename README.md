@@ -1,17 +1,17 @@
-# imgur-api
+# imgur-client
 
 > Interact easily with the [imgur.com](imgur.com) API
 
 # Installation
 
 ```shell
-npm i -S imgur-api
+npm i -S imgur-client
 ```
 
 # Usage
 
 ```js
-var imgur = require('imgur-api');
+var imgur = require('imgur-client');
 
 imgur('YOUR_IMGUR_KEY').upload('/path/to/image', function (err, res) {
   if (err) {
