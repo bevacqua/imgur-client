@@ -1,0 +1,23 @@
+{
+  "name": "imgur-api",
+  "description": "Interact easily with the imgur.com API",
+  "version": "0.1.0",
+  "homepage": "https://github.com/bevacqua/imgur-api",
+  "authors": [
+    "Nicolas Bevacqua <nicolasbevacqua@gmail.com>"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bevacqua/imgur-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bevacqua/imgur-api/issues"
+  },
+  "dependencies": {
+    "form-data": "^0.1.3"
+  },
+  "bin": {
+    "imgur": "./bin/imgur"
+  }
+}

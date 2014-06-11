@@ -1,0 +1,76 @@
+#!/usr/bin/env node
+
+var imgur = require('..');
+var args = process.argv.slice(2);
+var keyfile = process.env.HOME + '/.imgur_key';
+var key = '';
+var uploads_remaining = '';
+var uploads_reset_time = '';
+
+function getKey () {
+  if (!fs.existsSync(keyfile)) {
+    return false;
+  }
+  return fs.readFileSync(keyfile, 'utf8').replace(/[\n\r\t\s]/gm, '');
+}
+
+function setKey (key) {
+  fs.writeFile(keyfile, key, 'utf8', function (err) {
+    if (err) {
+      throw err;
+    }
+  });
+}
+
+if (!args.length) {
+  return;
+}
+
+if (args[0] === '-k') {
+  if (args[1] === void 0) {
+    console.log('Please specify a key, e.g: imgur -k <key>');
+    return;
+  }
+
+  key = args[1];
+  setKey(key);
+  console.log('Key set to %s', key);
+} else {
+  key = getKey();
+
+  if (!key) {
+    console.log([
+      'Please specify a key, e.g: imgur -k <key>',
+      'You can get one at http://imgur.com/register/api_anon'
+    ].join('\n'));
+    return;
+  }
+}
+
+args.forEach(function (value, i, array) {
+  imgur(key).upload(value, function uploaded (err, res) {
+    if (err) {
+      console.log('Failed to upload %s (%s)', value, err);
+
+      if (err.rate !== void 0) {
+        uploads_remaining = (res.rate.remaining / 10);   //
+        uploads_reset_time = new Date(res.rate.remaining * 1000);
+        console.log('\nUploads credits remaining: %s  (1 upload == 10 credits)', uploads_remaining);
+        console.log('Upload limit resets: %s\n', uploads_reset_time.toLocaleString());
+      }
+      return;
+    }
+
+    uploads_remaining = res.rate.remaining;
+    uploads_reset_time = res.rate.reset;
+
+    console.log('%s --> %s', res.links.original, res.file);
+
+    if (i === array.length - 1) {
+      uploads_remaining = (uploads_remaining / 10);   //
+      uploads_reset_time = new Date(uploads_reset_time * 1000);
+      console.log('\nUploads credits remaining: %s  (1 upload == 10 credits)', uploads_remaining);
+      console.log('Upload limit resets: %s\n', uploads_reset_time.toLocaleString());
+    }
+  });
+});
