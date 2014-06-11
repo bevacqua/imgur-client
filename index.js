@@ -21,12 +21,12 @@ function upload (key, file, done) {
       return;
     }
 
-    var body = '',
-    ratelimit = {
+    var body = '';
+    var ratelimit = {
       limit: null,
       remaining: null,
       reset: null
-    },
+    };
 
     res.setEncoding('utf8');
 
