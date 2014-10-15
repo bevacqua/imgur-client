@@ -2,12 +2,9 @@
 
 var https = require('https');
 var fs = require('fs');
-var path = require('path');
 var FormData = require('form-data');
 var host = 'https://api.imgur.com';
 var endpoint = '/2/upload.json';
-var types = 'jpg jpeg gif png apng tiff bmp pdf xcf'.split(' ');
-var rtypes = new RegExp('(' + types.join('|') + ')', 'i');
 
 function upload (key, file, done) {
   var form = new FormData();
@@ -49,10 +46,12 @@ function upload (key, file, done) {
       }
 
       done(res.statusCode === 200 ? null : json, {
-        status_code: res.statusCode || 'Unknown',
+        statusCode: res.statusCode,
         rate: ratelimit,
         file: file,
-        body: json
+        raw: json,
+        links: json.upload && json.upload.links,
+        image: json.upload && json.upload.image
       });
     });
   });
